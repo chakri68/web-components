@@ -1,8 +1,15 @@
 <script>
-	import AnimatedBtn from '$lib/components/AnimatedBtn.svelte';
+	import Preview from '$lib/components/Preview.svelte';
 </script>
 
-<AnimatedBtn />
+<Preview>
+	<div slot="primary">
+		<h1>Primary</h1>
+	</div>
+	<div slot="secondary">
+		<h1>Secondary</h1>
+	</div>
+</Preview>
 
 <style>
 	:global(body) {
@@ -10,5 +17,8 @@
 		place-items: center;
 		min-height: 100vh;
 		min-width: 100vw;
+		box-sizing: border-box;
+		padding: 0;
+		margin: 0;
 	}
 </style>
