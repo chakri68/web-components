@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	export let style = '';
+	export let width: string = '30rem';
+	export let height: string = '30rem';
+	export let mouseEnterAnimation: boolean = true;
 
 	let previewEl: HTMLDivElement;
-	let primaryEl: HTMLDivElement;
-	let secondaryEl: HTMLDivElement;
 
 	let isActive: boolean = false;
+	let noTransition: boolean = false;
 
 	function handleMouseEnter(ev: MouseEvent) {
 		isActive = true;
-		previewEl.addEventListener('mousemove', handleMouseMove);
-		previewEl.addEventListener('mouseleave', handleMouseOut);
+		noTransition = !mouseEnterAnimation;
 	}
 
 	function handleMouseMove(ev: MouseEvent) {
-		// Calculate the % of the mouse position relative to the preview element
 		const width = previewEl.clientWidth;
 		const xOffset = ev.clientX - previewEl.offsetLeft;
 		const percentage = +((xOffset / width) * 100).toFixed(2);
@@ -22,16 +22,22 @@
 	}
 
 	function handleMouseOut() {
-		isActive = false;
 		previewEl.style.setProperty('--primary-viewpoint', '100%');
-		previewEl.removeEventListener('mousemove', handleMouseMove);
-		previewEl.removeEventListener('mouseleave', handleMouseOut);
+		isActive = false;
+		noTransition = false;
 	}
 
 	function handleClick() {
-		previewEl.removeEventListener('mousemove', handleMouseMove);
-		previewEl.removeEventListener('mouseleave', handleMouseOut);
+		isActive = false;
 	}
+
+	const handleTransitionEnd = mouseEnterAnimation
+		? (ev: TransitionEvent) => {
+				if (ev.propertyName === 'width' && isActive) {
+					noTransition = true;
+				}
+			}
+		: null;
 </script>
 
 <div
@@ -40,23 +46,26 @@
 	bind:this={previewEl}
 	on:mouseenter={handleMouseEnter}
 	on:click={handleClick}
+	on:mousemove={isActive ? handleMouseMove : null}
+	on:mouseleave={isActive ? handleMouseOut : null}
+	style={style + `width: ${width}; height: ${height};`}
 >
-	<div class="primary" bind:this={primaryEl}>
+	<div class="primary" on:transitionend={handleTransitionEnd} class:noTransition>
 		<slot name="primary" />
 	</div>
-	<div class="secondary" bind:this={secondaryEl}>
+	<div class="secondary">
 		<slot name="secondary" />
 	</div>
 </div>
 
 <style lang="scss">
 	.preview {
-		--primary-viewpoint: 20%;
+		--primary-viewpoint: 100%;
 
 		position: relative;
 		transform: rotate(0deg);
-		min-height: 30rem;
-		min-width: 30rem;
+		background-color: white;
+		overflow: hidden;
 
 		.primary,
 		.secondary {
@@ -65,7 +74,6 @@
 			left: 0;
 			height: 100%;
 			width: 100%;
-			background-color: white;
 		}
 
 		.primary {
@@ -73,8 +81,14 @@
 			width: var(--primary-viewpoint);
 			z-index: 2;
 			overflow: hidden;
+			background-color: inherit;
+			transition: all 0.3s ease-in-out;
 
-			/* TODO: Add Transition */
+			&.noTransition {
+				transition:
+					opacity 0.3s ease-in-out,
+					border-right 0.3s ease-in-out;
+			}
 		}
 
 		&.active {
