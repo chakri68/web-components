@@ -1,10 +1,6 @@
 import dirTree from 'directory-tree';
 import * as fs from 'fs';
 
-const baseRoute = '/';
-const routes: string[] = [baseRoute];
-const date = new Date().toISOString().split('T')[0];
-
 function getSitemapXML(domain: string, routes: string[]) {
 	let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
 	sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
@@ -21,6 +17,7 @@ function getSitemapUrl(location: string) {
 }
 
 function getEndpoints(tree: dirTree.DirectoryTree, route: string) {
+	const routes: string[] = [];
 	tree.children!.forEach((child) => {
 		if (child.children != undefined && child.children.length != 0) {
 			const childRoute = route + child.name;
@@ -30,16 +27,30 @@ function getEndpoints(tree: dirTree.DirectoryTree, route: string) {
 			getEndpoints(child, childRoute + '/');
 		}
 	});
+	return routes;
+}
+
+function getWebComponents() {
+	const webComponents: string[] = [];
+	const components = fs.readdirSync('./src/lib/web-components') as string[];
+	components.forEach((component) => {
+		webComponents.push(component);
+	});
+	return webComponents;
 }
 
 const tree = dirTree('./src/routes');
 
-getEndpoints(tree, baseRoute);
+const baseRoute = '/';
+const routes = [baseRoute, ...getWebComponents().map((component) => `/components/${component}`)];
+const date = new Date().toISOString().split('T')[0];
 
 const VERCEL_URL = process.env.VERCEL_URL ?? 'http://localhost:3000';
 
 // YOUR_DOMAIN should be like https://example.com
 const sitemap = getSitemapXML(VERCEL_URL, routes);
+
+console.log(sitemap);
 
 // If you use the script in postbuild mode use
 // For vercel deployment use:

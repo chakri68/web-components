@@ -8,7 +8,7 @@
 	let loading: boolean = true;
 
 	onMount(() => {
-		import(`../../../lib/components/${data.componentName}.example.svelte`)
+		import(`../../../lib/web-components/${data.componentName}/${data.componentName}.example.svelte`)
 			.then((module) => {
 				Component = module.default;
 			})
