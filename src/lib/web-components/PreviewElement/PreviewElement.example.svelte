@@ -1,5 +1,5 @@
 <script>
-	import Preview from './Preview.svelte';
+	import Preview from './PreviewElement.svelte';
 </script>
 
 <Preview

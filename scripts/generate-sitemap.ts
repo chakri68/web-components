@@ -42,7 +42,7 @@ function getWebComponents() {
 // const tree = dirTree('./src/routes');
 
 const baseRoute = '/';
-const routes = [baseRoute, ...getWebComponents().map((component) => `/components/${component}`)];
+const routes = [baseRoute, ...getWebComponents().map((component) => `/component/${component}`)];
 const date = new Date().toISOString().split('T')[0];
 
 const PUBLIC_URL = process.env.PUBLIC_URL ?? 'http://localhost:3000';
