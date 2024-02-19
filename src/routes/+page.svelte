@@ -1,15 +1,4 @@
-<script>
-	import Preview from '$lib/components/Preview.svelte';
-</script>
-
-<Preview>
-	<div slot="primary">
-		<h1>Primary</h1>
-	</div>
-	<div slot="secondary">
-		<h1>Secondary</h1>
-	</div>
-</Preview>
+<h1>Welcome to my web-components showcase!</h1>
 
 <style>
 	:global(body) {
