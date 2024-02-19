@@ -8,6 +8,7 @@
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
+		"postbuild": "tsx ./scripts/generate-sitemap.ts",
 		"preview": "vite preview",
 		"package": "svelte-kit sync && svelte-package && publint",
 		"prepublishOnly": "npm run package",
@@ -39,6 +40,7 @@
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
 		"autoprefixer": "^10.4.17",
+		"directory-tree": "^3.5.1",
 		"eslint": "^8.56.0",
 		"eslint-config-prettier": "^9.1.0",
 		"eslint-plugin-svelte": "^2.35.1",
@@ -51,6 +53,7 @@
 		"svelte-check": "^3.6.0",
 		"tailwindcss": "^3.4.1",
 		"tslib": "^2.4.1",
+		"tsx": "^4.7.1",
 		"typescript": "^5.0.0",
 		"vite": "^5.0.11"
 	},
